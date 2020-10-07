@@ -24,7 +24,7 @@ void setup(void)
   }
 
   // Sets the range for accelerometer and gyroscope
-  mpu.setAccelerometerRange(MPU6050_RANGE_16_G);
+  mpu.setAccelerometerRange(MPU6050_RANGE_4_G);
   mpu.setGyroRange(MPU6050_RANGE_500_DEG);
   // Sets the filter bandwidth
   mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
@@ -41,6 +41,7 @@ void setup(void)
     if(cal_int % 20 == 0)
       Serial.print(".");    // progress bar
     MPU_Calibration.acc_x_tare = (MPU_Calibration.acc_x_tare + a.acceleration.x) / 2.0;
+
     //#error Calibration NOT finished
     //time between calibration readings
     delay(1);                                   
@@ -51,13 +52,13 @@ void setup(void)
   //These are the found calibration values...
   Serial.println("Calibration complete...");
   Serial.println("Ax\t Ay\t Az\t Gx\t Gy\t Gz");
-  Serial.print(String(MPU_Calibration.acc_x_tare) + "\t ");
-  Serial.print(String(MPU_Calibration.acc_y_tare) + "\t ");
-  Serial.print(String(MPU_Calibration.acc_z_tare) + "\t ");
-  Serial.print(String(MPU_Calibration.gyro_x_tare) + "\t ");
-  Serial.print(String(MPU_Calibration.gyro_y_tare) + "\t ");
-  Serial.print(String(MPU_Calibration.gyro_z_tare) + "\t ");
-  Serial.println();
+  printtab(MPU_Calibration.acc_x_tare);
+  printtab(MPU_Calibration.acc_y_tare);
+  printtab(MPU_Calibration.acc_z_tare);
+  printtab(MPU_Calibration.gyro_x_tare);
+  printtab(MPU_Calibration.gyro_y_tare);
+  printtab(MPU_Calibration.gyro_z_tare);
+  printline();
   //Read a sample from the MPU-6050
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
@@ -73,9 +74,6 @@ void setup(void)
   Serial.println();
   Serial.println("Calibrated read...");
   Serial.println("Ax\t Ay\t Az\t Gx\t Gy\t Gz");
-  printtab(MPU_Calibration.acc_x_tare-a.acceleration.x);
-  printtab(MPU_Calibration.acc_y_tare-a.acceleration.y);
-  printtab(MPU_Calibration.acc_z_tare-a.acceleration.z);
 
   Serial.print(String(MPU_Calibration.acc_x_tare-a.acceleration.x) + "\t ");
   Serial.print(String(MPU_Calibration.acc_y_tare-a.acceleration.y) + "\t ");
@@ -84,7 +82,7 @@ void setup(void)
   Serial.print(String(MPU_Calibration.gyro_y_tare-g.gyro.y) + "\t ");
   Serial.print(String(MPU_Calibration.gyro_z_tare-g.gyro.z) + "\t ");
   Serial.println();
-  delay(3000);
+  delay(1000);
 }
 
 #define OUTPUT_RAW6DOF                  true
@@ -158,7 +156,7 @@ void loop()
     raw_acc_y = a.acceleration.y;
     raw_acc_z = a.acceleration.z;
 
-    double accelPitch_rad  = atan2(raw_acc_y, raw_acc_z) * radtodeg;
+    double accelPitch_rad  = atan2(raw_acc_y, raw_acc_z);
     printtab(accelPitch_rad * radtodeg);
   } 
   //Find the acclerometer vector

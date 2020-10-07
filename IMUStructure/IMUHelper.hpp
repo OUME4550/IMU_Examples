@@ -8,7 +8,7 @@ class IMU_Calibration
   public:
     double gyro_x_tare, gyro_y_tare, gyro_z_tare;
     double acc_x_tare, acc_y_tare, acc_z_tare;
-    static const int cal_samples = 1;
+    static const int cal_samples = 250;
     IMU_Calibration()
     {
       acc_x_tare=acc_y_tare=acc_z_tare=0.0;

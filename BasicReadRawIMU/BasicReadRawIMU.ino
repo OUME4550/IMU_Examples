@@ -25,12 +25,13 @@ void setup(void)
   }
 
   // Sets the range for accelerometer and gyroscope
-  mpu.setAccelerometerRange(MPU6050_RANGE_16_G);
-  mpu.setGyroRange(MPU6050_RANGE_500_DEG);
+  mpu.setAccelerometerRange(MPU6050_RANGE_4_G);
+  mpu.setGyroRange(MPU6050_RANGE_250_DEG);
   // Sets the filter bandwidth
   mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
   printtab("Ax");printtab("Ay");printtab("Az");
   printtab("Gx");printtab("Gy");printtab("Gz");
+  printline();
 }
 void loop() 
 {
@@ -46,5 +47,5 @@ void loop()
   printtab(g.gyro.z);
  
   printline();
-  delay(10);
+  delay(1);
 }
