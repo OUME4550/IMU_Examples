@@ -6,7 +6,7 @@
 Adafruit_MPU6050 mpu;
 
 //Complimetery Filter Variable (lower value = faster response, but more noise)
-#define tau 0.90
+#define tau 0.50
 
 //Class to hold roll/pitch estimations and tares
 void setup(void) 
@@ -91,11 +91,18 @@ void setup(void)
 #define OUTPUT_TARE6DOF                 false
 #define OUTPUT_GYRO_INTEGRAL            false
 #define OUTPUT_GYRO_CALIBRATED_INTEGRAL false
+#define OUTPUT_ACC_VECTOR               false
 #define OUTPUT_ACC_VECTOR_CALIBRATED    false
 #define OUTPUT_COMPLEMENATARY_FILTER    false
 
 void loop() 
 {
+  // Determines dt for use in the complementary filter
+  static unsigned long lastTime = 0;
+  unsigned long micros_now = micros();
+  double dt = (micros_now - lastTime)/1e6;
+  //save the time for next loop
+  lastTime = micros_now;
   // Get new sensor events with the readings
   sensors_event_t a, g, temp;
   mpu.getEvent(&a, &g, &temp);
@@ -122,17 +129,11 @@ void loop()
   //Gyroscope integration only
   if(OUTPUT_GYRO_INTEGRAL)
   {
-    // Determines dt for use in the complementary filter
-    static unsigned long lastTime = 0;
-    unsigned long micros_now = micros();
-    double dt = (micros_now - lastTime)/1e6;
-    //save the time for next loop
-    lastTime = micros_now;
     //save this because of integration
-    static double raw_g_pitch_angle_rad = 0;
+    static double raw_g_pitch_angle_deg = 0;
     //do the pitch calc
-    raw_g_pitch_angle_rad += g.gyro.y * dt;
-    printtab(raw_g_pitch_angle_rad);
+    raw_g_pitch_angle_deg += g.gyro.y * dt;
+    printtab(raw_g_pitch_angle_deg);
     //ROLL????
     //
     #warning roll using gyro not done
@@ -140,21 +141,26 @@ void loop()
   //Gyroscope integration with calibration
   if(OUTPUT_GYRO_CALIBRATED_INTEGRAL)
   {
-    // Determines dt for use in the complementary filter
-    static unsigned long lastTime = 0;
-    unsigned long micros_now = micros();
-    double dt = (micros_now - lastTime)/1e6;
-    //save the time for next loop
-    lastTime = micros_now;
     //save this because of integration
-    static double pitch_angle_rad = 0;
+    static double pitch_angle_deg = 0;
     //do the pitch calc
-    pitch_angle_rad += (MPU_Calibration.gyro_y_tare-g.gyro.y) * dt;
-    printtab(pitch_angle_rad);
+    pitch_angle_deg += (MPU_Calibration.gyro_y_tare - g.gyro.y) * dt;
+    printtab(pitch_angle_deg);
     //ROLL????
     //
     #warning roll using tared gyro not done
   }
+  //Find the acclerometer vector
+  if(OUTPUT_ACC_VECTOR)
+  {
+    double raw_acc_x, raw_acc_y, raw_acc_z;
+    raw_acc_x = a.acceleration.x;
+    raw_acc_y = a.acceleration.y;
+    raw_acc_z = a.acceleration.z;
+
+    double accelPitch_rad  = atan2(raw_acc_y, raw_acc_z) * radtodeg;
+    printtab(accelPitch_rad * radtodeg);
+  } 
   //Find the acclerometer vector
   if(OUTPUT_ACC_VECTOR_CALIBRATED)
   {
@@ -163,8 +169,8 @@ void loop()
     Craw_acc_z = MPU_Calibration.acc_z_tare - a.acceleration.z;
     
     //INVERT Z !!!, otherwise you get +/- 180 flips
-    double accelPitch  = atan2(Craw_acc_y, -Craw_acc_z);
-    printtab(accelPitch * radtodeg);
+    double accelPitch_rad  = atan2(Craw_acc_y, -Craw_acc_z);
+    printtab(accelPitch_rad * radtodeg);
     //ROLL????
     #warning roll using tared vector not done
   } 
@@ -181,7 +187,7 @@ void loop()
 
 
     double CFpitch_angle_rad = 0;
-    printtab(CFpitch_angle_rad);
+    printtab(CFpitch_angle_rad * radtodeg);
     //printtab(CFroll_angle_rad);
   }
   printline();
