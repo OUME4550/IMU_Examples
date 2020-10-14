@@ -189,5 +189,5 @@ void loop()
     //printtab(CFroll_angle_rad);
   }
   printline();
-  delay(10);
+  delay(1);
 }
