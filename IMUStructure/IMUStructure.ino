@@ -156,7 +156,7 @@ void loop()
     raw_acc_y = a.acceleration.y;
     raw_acc_z = a.acceleration.z;
 
-    double accelPitch_rad  = atan2(raw_acc_y, raw_acc_z);
+    double accelPitch_rad  = atan2(raw_acc_x, raw_acc_z);
     printtab(accelPitch_rad * radtodeg);
   } 
   //Find the acclerometer vector
@@ -167,7 +167,7 @@ void loop()
     Craw_acc_z = MPU_Calibration.acc_z_tare - a.acceleration.z;
     
     //INVERT Z !!!, otherwise you get +/- 180 flips
-    double accelPitch_rad  = atan2(Craw_acc_y, -Craw_acc_z);
+    double accelPitch_rad  = atan2(Craw_acc_x, -Craw_acc_z);
     printtab(accelPitch_rad * radtodeg);
     //ROLL????
     #warning roll using tared vector not done
@@ -189,5 +189,5 @@ void loop()
     //printtab(CFroll_angle_rad);
   }
   printline();
-  delay(10);
+  delay(1);
 }
