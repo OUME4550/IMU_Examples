@@ -165,7 +165,7 @@ void loop()
     double Craw_acc_x, Craw_acc_y, Craw_acc_z;
     Craw_acc_y = MPU_Calibration.acc_y_tare - a.acceleration.y;
     Craw_acc_z = MPU_Calibration.acc_z_tare - a.acceleration.z;
-    
+    Craw_acc_x = MPU_Calibration.acc_x_tare - a.acceleration.x;
     //INVERT Z !!!, otherwise you get +/- 180 flips
     //Use x or y???
     double accelPitch_rad  = atan2(Craw_acc_x, -Craw_acc_z);
