@@ -1,5 +1,5 @@
 {
     "programmer": "AVR ISP",
     "board": "arduino:avr:uno",
-    "sketch": "SlimIMU\\IMUStructure.ino"
+    "sketch": "IMUStructure\\IMUStructure.ino"
 }
