@@ -83,7 +83,6 @@ void setup(void)
   printtab(MPU_Calibration.gyro_y_tare-g.gyro.y);
   printtab(MPU_Calibration.gyro_z_tare-g.gyro.z);
   printline();
-  delay(5000);
 }
 
 #define OUTPUT_RAW6DOF                  true
@@ -129,10 +128,10 @@ void loop()
   if(OUTPUT_GYRO_INTEGRAL)
   {
     //save this because of integration
-    static double raw_g_pitch_angle_deg = 0;
+    static double raw_g_pitch_angle_rad = 0;
     //do the pitch calc
-    raw_g_pitch_angle_deg += g.gyro.x * dt;
-    printtab(raw_g_pitch_angle_deg);
+    raw_g_pitch_angle_rad += g.gyro.x * dt;
+    printtab(raw_g_pitch_angle_rad * radtodeg);
     //ROLL????
     //
     #warning roll using gyro not done
@@ -141,10 +140,10 @@ void loop()
   if(OUTPUT_GYRO_CALIBRATED_INTEGRAL)
   {
     //save this because of integration
-    static double pitch_angle_deg = 0;
+    static double pitch_angle_rad = 0;
     //do the pitch calc
-    pitch_angle_deg += (MPU_Calibration.gyro_x_tare - g.gyro.x) * dt;
-    printtab(pitch_angle_deg);
+    pitch_angle_rad += (MPU_Calibration.gyro_x_tare - g.gyro.x) * dt;
+    printtab(pitch_angle_rad * radtodeg);
     //ROLL????
     //
     #warning roll using tared gyro not done
