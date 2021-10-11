@@ -43,7 +43,7 @@ void setup(void)
       Serial.print(".");    // progress bar
     MPU_Calibration.acc_x_tare = (MPU_Calibration.acc_x_tare + a.acceleration.x) / 2.0;
 
-    //#error Calibration NOT finished
+    #error Calibration NOT finished
     //time between calibration readings
     delay(1);                                   
   }
@@ -184,6 +184,7 @@ void loop()
     //Apply the complementary filter
     //Profit? Tendies?
 
+    #warning complementary filter not implemented
 
     double CFpitch_angle_rad = 0;
     printtab(CFpitch_angle_rad * radtodeg);
