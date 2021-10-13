@@ -41,8 +41,10 @@ void setup(void)
     mpu.getEvent(&a, &g, &temp);
     if(cal_int % 20 == 0)
       Serial.print(".");    // progress bar
-    MPU_Calibration.acc_x_tare = (MPU_Calibration.acc_x_tare + a.acceleration.x) / 2.0;
+    MPU_Calibration.acc_y_tare = (MPU_Calibration.acc_y_tare + a.acceleration.y) / 2.0;
 
+    //acclerometer z is special case if the sensor is pointed down...
+    MPU_Calibration.acc_z_tare = (MPU_Calibration.acc_z_tare - a.acceleration.z) / 2.0;
     //#error Calibration NOT finished
     //time between calibration readings
     delay(1);                                   
@@ -83,9 +85,11 @@ void setup(void)
   printtab(MPU_Calibration.gyro_y_tare-g.gyro.y);
   printtab(MPU_Calibration.gyro_z_tare-g.gyro.z);
   printline();
+  //make delay so humans can read the data
+  delay(4000);
 }
 
-#define OUTPUT_RAW6DOF                  true
+#define OUTPUT_RAW6DOF                  !true
 #define OUTPUT_TARE6DOF                 false
 #define OUTPUT_GYRO_INTEGRAL            false
 #define OUTPUT_GYRO_CALIBRATED_INTEGRAL false
@@ -154,21 +158,24 @@ void loop()
     double raw_acc_x, raw_acc_y, raw_acc_z;
     raw_acc_x = a.acceleration.x;
     raw_acc_y = a.acceleration.y;
-    raw_acc_z = a.acceleration.z;
+    //need to invert Z if the sensor is facing down
+    raw_acc_z = -a.acceleration.z;
 
-    double accelPitch_rad  = atan2(raw_acc_x, raw_acc_z);
+  
+    double accelPitch_rad  = -atan2(raw_acc_y, raw_acc_z);
     printtab(accelPitch_rad * radtodeg);
   } 
   //Find the acclerometer vector
   if(OUTPUT_ACC_VECTOR_CALIBRATED)
   {
-
     double Craw_acc_x, Craw_acc_y, Craw_acc_z;
     Craw_acc_y = MPU_Calibration.acc_y_tare - a.acceleration.y;
-    Craw_acc_z = MPU_Calibration.acc_z_tare - a.acceleration.z;
     Craw_acc_x = MPU_Calibration.acc_x_tare - a.acceleration.x;
-    //INVERT Z !!!, otherwise you get +/- 180 flips
-    double accelPitch_rad  = atan2(Craw_acc_x, -Craw_acc_z);
+    //tare is added to the z reading to handle sensor upside down
+    Craw_acc_z = MPU_Calibration.acc_x_tare + a.acceleration.z;
+
+    //z is *-1 to change output to +/- 0 instead of +/- 180
+    double accelPitch_rad  = atan2(Craw_acc_y, -Craw_acc_z);
     printtab(accelPitch_rad * radtodeg);
     //ROLL????
     #warning roll using tared vector not done
