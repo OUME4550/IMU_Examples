@@ -45,7 +45,9 @@ void setup(void)
 
     //acclerometer z is special case if the sensor is pointed down...
     MPU_Calibration.acc_z_tare = (MPU_Calibration.acc_z_tare - a.acceleration.z) / 2.0;
-    //#error Calibration NOT finished
+
+    #error Calibration NOT finished
+
     //time between calibration readings
     delay(1);                                   
   }
@@ -191,6 +193,7 @@ void loop()
     //Apply the complementary filter
     //Profit? Tendies?
 
+    #warning complementary filter not implemented
 
     double CFpitch_angle_rad = 0;
     printtab(CFpitch_angle_rad * radtodeg);
