@@ -72,7 +72,7 @@ void setup(void)
   printline("Ax\t Ay\t Az\t Gx\t Gy\t Gz");
   printtab(a.acceleration.x);
   printtab(a.acceleration.y);
-  printtab(a.acceleration.z);
+  printtab(-a.acceleration.z);
   printtab(g.gyro.x);
   printtab(g.gyro.y);
   printtab(g.gyro.z);
@@ -82,7 +82,7 @@ void setup(void)
 
   printtab(MPU_Calibration.acc_x_tare-a.acceleration.x);
   printtab(MPU_Calibration.acc_y_tare-a.acceleration.y);
-  printtab(MPU_Calibration.acc_z_tare-a.acceleration.z);
+  printtab(MPU_Calibration.acc_z_tare+a.acceleration.z);
   printtab(MPU_Calibration.gyro_x_tare-g.gyro.x);
   printtab(MPU_Calibration.gyro_y_tare-g.gyro.y);
   printtab(MPU_Calibration.gyro_z_tare-g.gyro.z);
@@ -116,7 +116,7 @@ void loop()
   {
     printtab(a.acceleration.x);
     printtab(a.acceleration.y);
-    printtab(a.acceleration.z);
+    printtab(-a.acceleration.z);
     printtab(g.gyro.x);
     printtab(g.gyro.y);
     printtab(g.gyro.z);
@@ -125,7 +125,7 @@ void loop()
   {
     printtab(MPU_Calibration.acc_x_tare-a.acceleration.x);
     printtab(MPU_Calibration.acc_y_tare-a.acceleration.y);
-    printtab(MPU_Calibration.acc_z_tare-a.acceleration.z);
+    printtab(MPU_Calibration.acc_z_tare+a.acceleration.z);
     printtab(MPU_Calibration.gyro_x_tare-g.gyro.x);
     printtab(MPU_Calibration.gyro_y_tare-g.gyro.y);
     printtab(MPU_Calibration.gyro_z_tare-g.gyro.z);
