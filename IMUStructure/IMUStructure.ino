@@ -136,7 +136,7 @@ void loop()
     //save this because of integration
     static double raw_g_pitch_angle_rad = 0;
     //do the pitch calc
-    raw_g_pitch_angle_rad += g.gyro.x * dt;
+    raw_g_pitch_angle_rad += g.gyro.y * dt;
     printtab(raw_g_pitch_angle_rad * radtodeg);
     //ROLL????
     //
@@ -148,7 +148,7 @@ void loop()
     //save this because of integration
     static double pitch_angle_rad = 0;
     //do the pitch calc
-    pitch_angle_rad += (MPU_Calibration.gyro_x_tare - g.gyro.x) * dt;
+    pitch_angle_rad += (MPU_Calibration.gyro_y_tare - g.gyro.y) * dt;
     printtab(pitch_angle_rad * radtodeg);
     //ROLL????
     //
